@@ -1,5 +1,4 @@
 from enum import Enum
-from src.Server import Location
 
 
 class Alignment(Enum):
