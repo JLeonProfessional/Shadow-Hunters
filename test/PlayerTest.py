@@ -42,5 +42,17 @@ class PlayerTest(unittest.TestCase):
         player.move_player(6, 4)
         self.assertTrue(player.get_location() in Location.ALTAR.value)
 
+    def test_is_alive(self):
+        player = Player(10)
+        self.assertTrue(player.is_alive())
+
+        player.set_health(9)
+        self.assertTrue(player.is_alive())
+
+        player.set_health(10)
+        self.assertFalse(player.is_alive())
+
+        player.set_health(11)
+        self.assertFalse(player.is_alive())
 
 

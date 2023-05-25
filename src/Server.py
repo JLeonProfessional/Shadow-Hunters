@@ -9,6 +9,12 @@ location3 = []
 players = []
 
 
+def initialize_game(number_of_players):
+    for player in range(0, number_of_players):
+        players.append(Player(10))
+    place_locations()
+
+
 def place_locations():
     unplaced_locations = [
         Location.GREEN,
@@ -37,6 +43,11 @@ def get_local_locations(location):
         for value in card.value:
             local_locations.append(value)
     return local_locations
+
+
+def do_combat(attacking_player, defending_player, damage):
+    if valid_target(attacking_player, defending_player):
+        defending_player.set_health(defending_player.get_health() + damage)
 
 
 def valid_target(player1, player2):

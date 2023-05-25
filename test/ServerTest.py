@@ -6,6 +6,11 @@ import unittest
 
 class PlayerTest(unittest.TestCase):
 
+    def tearDown(self) -> None:
+        location1.clear()
+        location2.clear()
+        location3.clear()
+
     def test_calculate_damage(self):
         self.assertTrue(0 < roll_dice(6) < 7, 'Dice did not roll correctly')
         self.assertTrue(0 < roll_dice(4) < 5, 'Dice did not roll correctly')
@@ -27,9 +32,7 @@ class PlayerTest(unittest.TestCase):
         self.assertTrue(Location.WOODS in location1 or Location.WOODS in location2 or Location.WOODS in location3)
         self.assertTrue(Location.GREEN in location1 or Location.GREEN in location2 or Location.GREEN in location3)
 
-        location1.clear()
-        location2.clear()
-        location3.clear()
+
 
     def test_get_local_locations(self):
         test_location = [Location.GREEN, Location.PURPLE]
@@ -72,7 +75,68 @@ class PlayerTest(unittest.TestCase):
         player2.set_location(Location.WOODS.value[0])
         self.assertTrue(valid_target(player1, player2))
 
-        location1.clear()
-        location2.clear()
-        location3.clear()
+    def test_valid_target_middle(self):
+        location1.append(Location.GREEN)
+        location1.append(Location.PURPLE)
+
+        location2.append(Location.WHITE)
+        location2.append(Location.BLACK)
+
+        location3.append(Location.WOODS)
+        location3.append(Location.ALTAR)
+
+        player1 = Player(10)
+        player1.set_location(Location.GREEN.value[0])
+
+        player2 = Player(10)
+        player2.set_location(Location.NONE.value[0])
+
+        self.assertFalse(valid_target(player1, player2))
+        self.assertFalse(valid_target(player2, player1))
+
+    def test_combat_simulation_must_be_valid(self):
+        player1 = Player(10)
+        player2 = Player(10)
+
+        do_combat(player1, player2, 2)
+
+        self.assertEqual(0, player2.get_health())
+        self.assertTrue(player2.is_alive())
+
+        location1.append(Location.GREEN)
+        location1.append(Location.PURPLE)
+        player1.set_location(Location.GREEN.value[0])
+        player2.set_location(Location.PURPLE.value[0])
+
+        do_combat(player1, player2, 2)
+
+        self.assertEqual(2, player2.get_health())
+        self.assertTrue(player2.is_alive())
+
+        do_combat(player1, player2, 8)
+
+        self.assertEqual(10, player2.get_health())
+        self.assertFalse(player2.is_alive())
+
+    def test_initialize_game(self):
+        initialize_game(2)
+
+        self.assertEqual(2, len(players))
+        player1 = players[0]
+        self.assertEqual(-1, player1.get_location())
+        self.assertEqual(0, player1.get_health())
+        self.assertEqual(10, player1.get_max_health())
+
+        player2 = players[1]
+        self.assertEqual(-1, player2.get_location())
+        self.assertEqual(0, player2.get_health())
+        self.assertEqual(10, player2.get_max_health())
+
+        self.assertTrue(Location.GREEN in location1 or Location.GREEN in location2 or Location.GREEN in location3)
+        self.assertTrue(Location.PURPLE in location1 or Location.PURPLE in location2 or Location.PURPLE in location3)
+        self.assertTrue(Location.WHITE in location1 or Location.WHITE in location2 or Location.WHITE in location3)
+        self.assertTrue(Location.BLACK in location1 or Location.BLACK in location2 or Location.BLACK in location3)
+        self.assertTrue(Location.WOODS in location1 or Location.WOODS in location2 or Location.WOODS in location3)
+        self.assertTrue(Location.GREEN in location1 or Location.GREEN in location2 or Location.GREEN in location3)
+
 
