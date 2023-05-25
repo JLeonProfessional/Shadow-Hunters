@@ -8,4 +8,5 @@ class Location(Enum):
     BLACK = [8]
     WOODS = [9]
     ALTAR = [10]
+    NONE = [-1]
 
