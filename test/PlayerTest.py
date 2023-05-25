@@ -1,5 +1,5 @@
 from src.Player import *
-from src.Server import Location
+from src.Location import Location
 import unittest
 
 
