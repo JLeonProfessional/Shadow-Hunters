@@ -9,6 +9,7 @@ class Alignment(Enum):
 
 
 class Player:
+    player_id = -1
     location = Location.NONE.value[0]
     health = 0
     max_health = -1
@@ -44,7 +45,10 @@ class Player:
     def is_alive(self):
         return self.health < self.max_health
 
+    def get_player_id(self):
+        return self.player_id
 
-
+    def set_player_id(self, player_id):
+        self.player_id = player_id
 
 
