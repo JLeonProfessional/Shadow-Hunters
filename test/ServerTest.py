@@ -157,7 +157,6 @@ class PlayerTest(unittest.TestCase):
         player.set_player_id(0)
         player.set_location(Location.GREEN.value[0])
 
-        player.set_location(Location.GREEN.value[0])
         player2 = Player(10)
         player2.set_player_id(1)
         player2.set_location(Location.GREEN.value[0])
