@@ -1,6 +1,7 @@
 from src.Server import *
 from src.Player import *
 from src.Location import Location
+from src.Action import Action
 import unittest
 
 
@@ -10,6 +11,7 @@ class PlayerTest(unittest.TestCase):
         location1.clear()
         location2.clear()
         location3.clear()
+        players.clear()
 
     def test_calculate_damage(self):
         self.assertTrue(0 < roll_dice(6) < 7, 'Dice did not roll correctly')
@@ -139,4 +141,36 @@ class PlayerTest(unittest.TestCase):
         self.assertTrue(Location.WOODS in location1 or Location.WOODS in location2 or Location.WOODS in location3)
         self.assertTrue(Location.GREEN in location1 or Location.GREEN in location2 or Location.GREEN in location3)
 
+    def test_handle_client_action_move(self):
+        player = Player(10)
+
+        action_map = {
+            "action": Action.MOVE
+        }
+        handle_client_action(action_map, player)
+        self.assertTrue(player.get_location() != Location.NONE.value[0])
+
+    def test_handle_client_action_attack(self):
+
+        place_locations()
+        player = Player(10)
+        player.set_player_id(0)
+        player.set_location(Location.GREEN.value[0])
+
+        player.set_location(Location.GREEN.value[0])
+        player2 = Player(10)
+        player2.set_player_id(1)
+        player2.set_location(Location.GREEN.value[0])
+
+        players.append(player)
+        players.append(player2)
+        action_map = {
+            "action": Action.ATTACK,
+            "target": player2.get_player_id(),
+            "dice1": 6,
+            "dice2": 4
+        }
+        handle_client_action(action_map, player)
+        self.assertTrue(player.get_location() != Location.NONE.value[0])
+        self.assertTrue(player2.get_health() > 0)
 

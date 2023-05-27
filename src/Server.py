@@ -1,7 +1,7 @@
 import random
 from src.Player import Player
 from src.Location import Location
-
+from src.Action import Action
 
 location1 = []
 location2 = []
@@ -69,6 +69,20 @@ def valid_target(player1, player2):
     if current_location in valid_locations3:
         return player2.get_location() in valid_locations3
 
+
+def handle_client_action(action_map, player):
+    action = action_map["action"]
+    if action == Action.MOVE:
+        player.move_player(roll_dice(6), roll_dice(4))
+    if action == Action.ATTACK:
+        damage = player.calculate_damage(action_map["dice1"], action_map["dice2"])
+        target_id = action_map["target"]
+        target = None
+        for potential_target in range(0, len(players)):
+            if players[potential_target].get_player_id() == target_id:
+                target = players[potential_target]
+
+        do_combat(player, target, damage)
 
 
 
