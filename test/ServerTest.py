@@ -1,11 +1,11 @@
-from src.Server import handle_client_action, receive_client_information, players, user_id_client_map, receive_message
-from src.StringHelper import *
+from src.Server import handle_client_action, receive_client_information, players, user_id_client_map, receive_message, clients
 import socket
 import json
 from src.Action import Action
 from src.Player import Player
 from src.GameMechanics import place_locations
 from src.Location import *
+from src.StringHelper import *
 import unittest
 
 
@@ -47,8 +47,10 @@ class PlayerTest(unittest.TestCase):
         user_information_map = {
             "player_id": 12
         }
+        json_dump = encode(json.dumps(user_information_map))
         client = socket.socket
-        receive_client_information(client, user_information_map)
+        receive_client_information(client, json_dump)
+        self.assertEqual(1, len(clients))
         self.assertEqual(1, len(user_id_client_map))
         self.assertEqual(client, user_id_client_map[12])
 

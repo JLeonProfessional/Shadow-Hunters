@@ -11,7 +11,7 @@ user_id_client_map = {}
 
 
 host = '127.0.0.1'
-port = 55559
+port = 60010
 
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 server.bind((host, port))
@@ -36,8 +36,11 @@ def handle_client_action(action_map, player):
 
 
 def receive_client_information(client, information_map):
-    player_id = information_map["player_id"]
+    actual_map = receive_message(information_map)
+    player_id = actual_map["player_id"]
     user_id_client_map[player_id] = client
+    clients.append(client)
+
 
 def receive_message(message):
     received_message = decode(message)
@@ -56,13 +59,14 @@ def receive_message(message):
 #             handle_exception(client)
 #             break
 
-# def catch_clients():
-#     while True:
-#         client, address = server.accept()
-#         print(f'New connection from {address}')
-#         receive_client_information(client, decode(client.recv(1024)))
-#
-#
+def catch_clients():
+    while True:
+        client, address = server.accept()
+        print(f'New connection from {address}')
+        receive_client_information(client, client.recv(1024))
+
+
+print("Server started")
 # catch_clients()
 
 
