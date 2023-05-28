@@ -1,73 +1,24 @@
-import random
-from src.Player import Player
-from src.Location import Location
+import socket
 from src.Action import Action
-
-location1 = []
-location2 = []
-location3 = []
-players = []
+from src.StringHelper import *
+import json
+from src.GameMechanics import *
 
 
-def initialize_game(number_of_players):
-    for player in range(0, number_of_players):
-        players.append(Player(10))
-    place_locations()
+clients = []
+user_ids = []
+user_id_client_map = {}
 
 
-def place_locations():
-    unplaced_locations = [
-        Location.GREEN,
-        Location.PURPLE,
-        Location.WHITE,
-        Location.BLACK,
-        Location.WOODS,
-        Location.ALTAR,
-    ]
+host = '127.0.0.1'
+port = 55559
 
-    location1.append(unplaced_locations.pop(random.randint(0, 5)))
-    location1.append(unplaced_locations.pop(random.randint(0, 4)))
-    location2.append(unplaced_locations.pop(random.randint(0, 3)))
-    location2.append(unplaced_locations.pop(random.randint(0, 2)))
-    location3.append(unplaced_locations.pop(random.randint(0, 1)))
-    location3.append(unplaced_locations.pop(0))
+server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+server.bind((host, port))
+server.listen()
 
 
-def roll_dice(dice_sides):
-    return random.randint(1, dice_sides)
 
-
-def get_local_locations(location):
-    local_locations = []
-    for card in location:
-        for value in card.value:
-            local_locations.append(value)
-    return local_locations
-
-
-def do_combat(attacking_player, defending_player, damage):
-    if valid_target(attacking_player, defending_player):
-        defending_player.set_health(defending_player.get_health() + damage)
-
-
-def valid_target(player1, player2):
-    """
-    :param player1
-    :type player1: Player
-    :param player2
-    :type player2: Player
-    """
-    valid_locations1 = get_local_locations(location1)
-    valid_locations2 = get_local_locations(location2)
-    valid_locations3 = get_local_locations(location3)
-
-    current_location = player1.get_location()
-    if current_location in valid_locations1:
-        return player2.get_location() in valid_locations1
-    if current_location in valid_locations2:
-        return player2.get_location() in valid_locations2
-    if current_location in valid_locations3:
-        return player2.get_location() in valid_locations3
 
 
 def handle_client_action(action_map, player):
@@ -81,10 +32,37 @@ def handle_client_action(action_map, player):
         for potential_target in range(0, len(players)):
             if players[potential_target].get_player_id() == target_id:
                 target = players[potential_target]
-
         do_combat(player, target, damage)
 
 
+def receive_client_information(client, information_map):
+    player_id = information_map["player_id"]
+    user_id_client_map[player_id] = client
 
+def receive_message(message):
+    received_message = decode(message)
+    message_data = json.loads(received_message)
+    return message_data
+
+
+# def receive_messages_from_client(client):
+#     while True:
+#         try:
+#             message = client.recv(1024)
+#             json = recieve_message_as_json(client)
+#             print(string_message)
+#             broadcastSentMessage(encode(string_message), client)
+#         except:
+#             handle_exception(client)
+#             break
+
+# def catch_clients():
+#     while True:
+#         client, address = server.accept()
+#         print(f'New connection from {address}')
+#         receive_client_information(client, decode(client.recv(1024)))
+#
+#
+# catch_clients()
 
 

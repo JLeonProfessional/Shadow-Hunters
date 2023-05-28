@@ -8,6 +8,8 @@ client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 host = '127.0.0.1'
 port = 60010
 
+username = ""
+
 
 def start_client():
     client.connect((host, port))
