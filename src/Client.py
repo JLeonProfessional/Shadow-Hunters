@@ -1,6 +1,9 @@
+import json
 import socket
+import threading
+from ClientMechanics import *
+
 from src.StringHelper import *
-from src.Action import Action
 
 
 client = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
@@ -9,10 +12,16 @@ host = '127.0.0.1'
 port = 60010
 
 username = ""
-
+user_id = 12
 
 def start_client():
     client.connect((host, port))
+    user_information_map = {
+        "player_id": 12
+    }
+    message_json = json.dumps(user_information_map)
+    print(message_json)
+    client.sendall(bytes(message_json, encoding="utf-8"))
 
 
 def receive():
@@ -23,20 +32,25 @@ def receive():
             return False
 
 
-def create_move_action():
-    action_map = {
-        "action": Action.MOVE
-    }
-    return action_map
+def write():
+    while True:
+        choice = input("action")
+        action_map = {}
+        if choice == "move":
+            action_map = create_move_action()
+        elif choice == "attack":
+            action_map = create_attack_action(12)
+        message_json = json.dumps(action_map)
+        print(message_json)
+        client.sendall(bytes(message_json, encoding="utf-8"))
 
 
-def create_move_attack(player_id):
-    action_map = {
-        "action": Action.ATTACK,
-        "target": player_id,
-        "dice1": 6,
-        "dice2": 4
-    }
-    return action_map
+start_client()
+
+receive_thread = threading.Thread(target=receive)
+receive_thread.start()
+
+write_thread = threading.Thread(target=write)
+write_thread.start()
 
 
