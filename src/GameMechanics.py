@@ -1,5 +1,6 @@
 from src.Player import Player
 from src.Location import Location
+from src.Server import *
 import random
 
 location1 = []
@@ -8,9 +9,11 @@ location3 = []
 
 players = []
 
-def initialize_game(number_of_players):
-    for player in range(0, number_of_players):
-        players.append(Player(10))
+def initialize_game():
+    for user_id in range(0, len(user_ids)):
+        player = Player(10)
+        player.set_player_id(user_ids[user_id])
+        players.append(player)
     place_locations()
 
 
