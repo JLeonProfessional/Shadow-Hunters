@@ -1,6 +1,11 @@
 from src.Action import Action
+from src.StringHelper import encode
 from src.GameMechanics import *
+from src.Server import receive_client_information
+import json
+import socket
 import unittest
+
 
 class PlayerTest(unittest.TestCase):
 
@@ -118,18 +123,33 @@ class PlayerTest(unittest.TestCase):
         self.assertFalse(player2.is_alive())
 
     def test_initialize_game(self):
-        initialize_game(2)
+        user_information_map = {
+            "player_id": 12
+        }
+        json_dump = encode(json.dumps(user_information_map))
+        client = socket.socket
+        receive_client_information(client, json_dump)
+        user_information_map = {
+            "player_id": 13
+        }
+        json_dump = encode(json.dumps(user_information_map))
+        client = socket.socket
+        receive_client_information(client, json_dump)
+
+        initialize_game()
 
         self.assertEqual(2, len(players))
         player1 = players[0]
         self.assertEqual(-1, player1.get_location())
         self.assertEqual(0, player1.get_health())
         self.assertEqual(10, player1.get_max_health())
+        self.assertEqual(12, player1.get_player_id())
 
         player2 = players[1]
         self.assertEqual(-1, player2.get_location())
         self.assertEqual(0, player2.get_health())
         self.assertEqual(10, player2.get_max_health())
+        self.assertEqual(13, player2.get_player_id())
 
         self.assertTrue(Location.GREEN in location1 or Location.GREEN in location2 or Location.GREEN in location3)
         self.assertTrue(Location.PURPLE in location1 or Location.PURPLE in location2 or Location.PURPLE in location3)

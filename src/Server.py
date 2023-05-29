@@ -38,6 +38,7 @@ def handle_client_action(action_map, player):
 def receive_client_information(client, information_map):
     actual_map = receive_message(information_map)
     player_id = actual_map["player_id"]
+    user_ids.append(player_id)
     user_id_client_map[player_id] = client
     clients.append(client)
 

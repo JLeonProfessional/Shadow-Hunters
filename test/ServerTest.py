@@ -1,4 +1,5 @@
-from src.Server import handle_client_action, receive_client_information, players, user_id_client_map, receive_message, clients
+from src.Server import handle_client_action, receive_client_information, players, user_id_client_map, receive_message, \
+    clients, user_ids
 import socket
 import json
 from src.Action import Action
@@ -53,6 +54,8 @@ class PlayerTest(unittest.TestCase):
         self.assertEqual(1, len(clients))
         self.assertEqual(1, len(user_id_client_map))
         self.assertEqual(client, user_id_client_map[12])
+        self.assertEqual(1, len(user_ids))
+        self.assertEqual(12, user_ids[0])
 
     def test_receive_message(self):
         action_map = {
